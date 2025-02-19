@@ -17,7 +17,7 @@ class Test_UserDetails (models.Model):
     UID = models.AutoField(primary_key=True)
     Name = models.CharField(max_length=25)
     Email = models.CharField(max_length=25,unique=True)
-    Collage = models.CharField(max_length=25)
+    College = models.CharField(max_length=25)
     Branch = models.CharField(max_length=25)
     Questions = models.JSONField(default=list)
     Questions_status = models.JSONField(default=dict)

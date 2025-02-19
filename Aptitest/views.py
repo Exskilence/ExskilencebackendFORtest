@@ -21,7 +21,7 @@ def AddUsers(request):
                 u = Test_UserDetails.objects.create(
                     Name = user.get('Name'),
                     Email = user.get('Email'),
-                    Collage = user.get('Collage'),
+                    College = user.get('College'),
                     Branch = user.get('Branch'),
                 )
             except Exception as e:
@@ -40,6 +40,10 @@ def login (request):
         email = data.get('email')
         user = Test_UserDetails.objects.get(Email = email)
         if user:
+            if user.Test_status=='Completed':
+                return HttpResponse(json.dumps({
+                'status': 'Test Completed'
+                }), content_type='application/json')
             return HttpResponse(json.dumps({
                 'status': 'success'
                 }), content_type='application/json')
@@ -166,7 +170,7 @@ def duration(UID):
             low = high = now
         # print("3")
         duration = (high - low).total_seconds()
-        # print('high',high,'low',low,'duration',duration/60)
+        print('high',high,'low',low,'duration',duration/60)
         return duration
     except Exception as e:
         return 0
