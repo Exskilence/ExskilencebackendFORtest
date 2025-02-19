@@ -192,7 +192,7 @@ def logout(request):
 @api_view(['GET'])
 def report(requrst):
     try:
-        users = list(Test_UserDetails.objects.exclude(Name="TEST").values('Name', 'Email', 'College', 'Branch', 'Score', 'Test_status'))
+        users = list(Test_UserDetails.objects.exclude(Name="TEST").values('Name', 'Email', 'College', 'Branch', 'Score', 'Test_status').order_by("-Score"))
         for u in users:
             if u.get('Test_status') =='Not_Started':
                 u.update({'Test_status':"No","Score":'-',"Total_Score":30,'Percentage': '0%'})
