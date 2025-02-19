@@ -188,3 +188,19 @@ def logout(request):
         return HttpResponse(json.dumps({
             'status': 'error',
             'data': str(e)}), content_type='application/json')
+  
+@api_view(['GET'])
+def report(requrst):
+    try:
+        users = list(Test_UserDetails.objects.exclude(Name="TEST").values('Name', 'Email', 'College', 'Branch', 'Score', 'Test_status'))
+        for u in users:
+            if u.get('Test_status') =='Not_Started':
+                u.update({'Test_status':"No","Score":'-',"Total_Score":30,'Percentage': '0%'})
+            else:
+                u.update({'Test_status':"Yes","Total_Score":30,'Percentage': str(round((u.get('Score') / 30) * 100, 2))+'%'})
+        return HttpResponse(json.dumps({
+            'data':  users}), content_type='application/json')
+    except Exception as e:
+        return HttpResponse(json.dumps({
+            'status': 'error',
+            'data': str(e)}), content_type='application/json')

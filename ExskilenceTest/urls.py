@@ -23,5 +23,6 @@ urlpatterns = [
     path('login/', ex.login),
     path('get/questions/', ex.get_questions),
     path('questions/submit/',ex.submit_answer),
-    path('test/submit/',ex.logout)
+    path('test/submit/',ex.logout),
+    path('test/report/',ex.report)
 ]
