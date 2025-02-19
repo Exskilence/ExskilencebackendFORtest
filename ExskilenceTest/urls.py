@@ -18,6 +18,7 @@ from django.urls import path
 from Aptitest import views as ex
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path ('', ex.home),
     path('add/users/', ex.AddUsers),
     path('login/', ex.login),
     path('get/questions/', ex.get_questions),

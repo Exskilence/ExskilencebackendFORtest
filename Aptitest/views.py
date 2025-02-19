@@ -5,6 +5,11 @@ from django.http import HttpResponse, JsonResponse
 from rest_framework.decorators import api_view
 from Aptitest.models import *
 from ExskilenceTest.Blob_service import *
+
+ONTIME = ONTIME = datetime.utcnow().__add__(timedelta(hours=5,minutes=30))
+@api_view(['GET'])   
+def home(request):
+    return HttpResponse(json.dumps({'Message': 'Welcome to the Home Page of STAGING By RK :--'+str(ONTIME)}), content_type='application/json')
 @api_view(['POST'])
 def AddUsers(request):
     try:
@@ -76,8 +81,10 @@ def get_questions(request):
         else:
             created =''
         arranged_list = sorted(qnsdata, key=lambda x: user.Questions.index(x['Qn_name']))
+        # print(duration(user.UID))
         return HttpResponse(json.dumps({
             'status': 'success',
+            'duration': duration(user.UID),
             'created': created,
             'user_on' :userOn if userOn is not None else "completed",
             'data': arranged_list}), content_type='application/json')
@@ -96,7 +103,7 @@ def UpdateStatus(user_UID,next_Qn):
                     'CorrectAnswer' : '',
                     'EnteredAnswer' : '',
                     'StartTime' : datetime.utcnow().__add__(timedelta(hours=5,minutes=30)),
-                    'EndTime' : None,
+                    'EndTime' : datetime.utcnow().__add__(timedelta(hours=5,minutes=30)),
                     })
          return 'success'
     except Exception as e:
@@ -133,9 +140,28 @@ def submit_answer(request):
         
         return HttpResponse(json.dumps({
             'status': 'success',
+            'duration': duration(user.UID),
             'data': 'success'}), content_type='application/json')
     except Exception as e:
         return HttpResponse(json.dumps({
             'status': 'error',
             'data': str(e)}), content_type='application/json')
-        
+from django.db.models import Min, Max      
+def duration(UID):
+    try:
+        answers = Test_Attendance.objects.filter(UID = UID)
+        # print("1",len(answers))
+        if len(answers) > 0:
+            agg = answers.aggregate(low=Min('StartTime'), high=Max('EndTime'))
+            # print('2')
+            low = agg['low']
+            high = agg['high']
+        else:
+            now = datetime.utcnow() + timedelta(hours=5, minutes=30)
+            low = high = now
+        # print("3")
+        duration = (high - low).total_seconds()
+        # print('high',high,'low',low,'duration',duration/60)
+        return duration
+    except Exception as e:
+        return 0
