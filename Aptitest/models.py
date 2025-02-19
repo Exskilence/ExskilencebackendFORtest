@@ -22,6 +22,7 @@ class Test_UserDetails (models.Model):
     Questions = models.JSONField(default=list)
     Questions_status = models.JSONField(default=dict)
     Score = models.IntegerField(default=0)
+    Test_status = models.CharField(max_length=25,default='Not_Started')
 
     class meta:
         db_table = 'Test_UserDetails'

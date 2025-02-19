@@ -22,5 +22,6 @@ urlpatterns = [
     path('add/users/', ex.AddUsers),
     path('login/', ex.login),
     path('get/questions/', ex.get_questions),
-    path('questions/submit/',ex.submit_answer)
+    path('questions/submit/',ex.submit_answer),
+    path('test/submit/',ex.logout)
 ]

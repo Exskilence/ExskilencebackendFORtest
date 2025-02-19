@@ -64,11 +64,16 @@ def get_questions(request):
                 'status': 'error',
                 'data': 'User not found', 'error':str(e)}), content_type='application/json')
         qnsdata =  JSONDATA
+        if user.Test_status == 'Completed':
+            return HttpResponse(json.dumps({
+                'status': 'error',
+                'data': 'Test Already Completed'}), content_type='application/json')
         if user.Questions == []:
             Qns = [j.get('Qn_name') for j in qnsdata]
             Qnslist = random.sample(Qns, len(Qns))
             user.Questions = Qnslist  if len(Qnslist) > 30 else Qnslist
             user.Questions_status = { j:0 for j in user.Questions}
+            user.Test_status = 'Started'
             user.save()
             
         userOn = None
@@ -165,3 +170,17 @@ def duration(UID):
         return duration
     except Exception as e:
         return 0
+@api_view(['POST'])
+def logout(request):
+    try:
+        data = json.loads(request.body)
+        email = data.get('email')
+        user = Test_UserDetails.objects.get(Email = email)
+        user.Test_status = 'Completed'
+        user.save()
+        return HttpResponse(json.dumps({
+            'status': 'success' }), content_type='application/json')
+    except Exception as e:
+        return HttpResponse(json.dumps({
+            'status': 'error',
+            'data': str(e)}), content_type='application/json')
