@@ -21,6 +21,8 @@ class Test_UserDetails (models.Model):
     Branch = models.CharField(max_length=25)
     Questions = models.JSONField(default=list)
     Questions_status = models.JSONField(default=dict)
+    Coding_Questions = models.JSONField(default=list)
+    Coding_Questions_status = models.JSONField(default=dict)
     Score = models.IntegerField(default=0)
     Test_status = models.CharField(max_length=25,default='Not_Started')
 

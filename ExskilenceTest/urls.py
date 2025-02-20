@@ -15,14 +15,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from Aptitest import views as ex
+from Aptitest import views as ex,Coding_test as cod
 urlpatterns = [
     path('admin/', admin.site.urls),
     path ('', ex.home),
     path('add/users/', ex.AddUsers),
     path('login/', ex.login),
-    path('get/questions/', ex.get_questions),
+    # path('get/questions/', ex.get_questions),
     path('questions/submit/',ex.submit_answer),
     path('test/submit/',ex.logout),
-    path('test/report/',ex.report)
+    path('test/report/',ex.report),
+    # path('add/coding/',cod.add_coding_test_questions),
+    path('get/coding/',cod.get_Questions)
 ]
