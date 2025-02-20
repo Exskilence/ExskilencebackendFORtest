@@ -24,7 +24,26 @@ class Test_UserDetails (models.Model):
     Coding_Questions = models.JSONField(default=list)
     Coding_Questions_status = models.JSONField(default=dict)
     Score = models.IntegerField(default=0)
+    Coding_Score = models.IntegerField(default=0)
     Test_status = models.CharField(max_length=25,default='Not_Started')
+    Coding_Test_status = models.CharField(max_length=25,default='Not_Started')
+    Duration = models.IntegerField(default=0)
+    Last_update = models.DateTimeField(default=None)
 
     class meta:
         db_table = 'Test_UserDetails'
+
+class QuestionDetails_Days(models.Model):
+    sl_no           = models.AutoField(primary_key=True)
+    Student_id      = models.CharField(max_length=25)
+    Subject         = models.CharField(max_length=25)
+    Attempts        = models.IntegerField()
+    StartTime       = models.DateTimeField()
+    EndTime         = models.DateTimeField()
+    Score           = models.FloatField()
+    Qn              = models.TextField(max_length=25)
+    Ans             = models.TextField()
+    Result          = models.JSONField(default=dict)
+
+    class meta:
+        db_table = 'Test_Coding_details'

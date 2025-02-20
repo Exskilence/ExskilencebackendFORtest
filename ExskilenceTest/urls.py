@@ -15,7 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from Aptitest import views as ex,Coding_test as cod
+from Aptitest import views as ex,Coding_test as cod,sqlviews as sql,pythonrun as ex_py
+from Aptitest import views as ex,HTML_CSS_views as html_css,js_views as js
 urlpatterns = [
     path('admin/', admin.site.urls),
     path ('', ex.home),
@@ -26,5 +27,15 @@ urlpatterns = [
     path('test/submit/',ex.logout),
     path('test/report/',ex.report),
     # path('add/coding/',cod.add_coding_test_questions),
-    path('get/coding/',cod.get_Questions)
+    path('get/coding/',cod.get_Questions),
+    path ('runsql/',sql.sql_query ),
+    path ('submit/',cod.submit ),
+    path ('html/',html_css.html_page ),
+    path ('css/',html_css.css_compare ),
+    path ('js/',js.js_Score ),
+    path ('runpy/',ex_py.run_python ),
+    path('duration/',cod.Coding_duration),
+
+
+
 ]

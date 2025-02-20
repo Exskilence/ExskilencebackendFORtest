@@ -88,6 +88,12 @@ AZURE_ACCOUNT_NAME = 'storeholder'
 AZURE_ACCOUNT_KEY = 'QxlUJdp8eSoPeQPas4NigSkXg6KMep7z+fPQ5CpPm0kRfjg7Q0lFmVEIyhU4ohFLFdSqntDAG6MY84elTfecnw=='
 AZURE_CONTAINER = 'tpdata'
 
+MSSQL_SERVER_NAME = 'slnkshmtbsil.database.windows.net'
+MSSQL_DATABASE_NAME = 'exe_test'
+MSSQL_USERNAME = 'tpssa'
+MSSQL_PWD = 'TPSuser@sa123'
+MSSQL_DRIVER =  'ODBC Driver 17 for SQL Server'
+
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 

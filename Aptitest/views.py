@@ -40,7 +40,7 @@ def login (request):
         email = data.get('email')
         user = Test_UserDetails.objects.get(Email = email)
         if user:
-            if user.Test_status=='Completed':
+            if user.Coding_Test_status=='Completed':
                 return HttpResponse(json.dumps({
                 'status': 'Test Completed'
                 }), content_type='application/json')
@@ -180,7 +180,8 @@ def logout(request):
         data = json.loads(request.body)
         email = data.get('email')
         user = Test_UserDetails.objects.get(Email = email)
-        user.Test_status = 'Completed'
+        # user.Test_status = 'Completed'
+        user.Coding_Test_status = "Completed"
         user.save()
         return HttpResponse(json.dumps({
             'status': 'success' }), content_type='application/json')
