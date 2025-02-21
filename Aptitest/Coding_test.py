@@ -16,6 +16,19 @@ JSONDATA_SQL = download_list_blob2('Coding_Test_Qns/SQL/','','internship')
 JSONDATA_HTML = download_list_blob2('Coding_Test_Qns/HTML/','','internship')
 JSONDATA_JS = download_list_blob2('Coding_Test_Qns/JS/','','internship')
 JSONDATA_PY = download_list_blob2('Coding_Test_Qns/Python/','','internship')
+def find_blob_name(sub,Qn_name):
+    if sub == 'HTML':
+        data =  JSONDATA_HTML
+    elif sub == 'JS':
+        data =  JSONDATA_JS
+    elif sub == 'Python':
+        data =  JSONDATA_PY
+    elif sub == 'SQL':
+        data =  JSONDATA_SQL
+    for i in data:
+        if i.get('Qn_name') == Qn_name:
+            print(i.get('Qn_name'),i)
+            return i 
 
 @api_view(['PUT']) 
 def add_coding_test_questions(request):
@@ -106,7 +119,8 @@ def get_Questions(request):
                 key = 'JS'
             elif str(qn).startswith('QPY'):
                 key = 'Python'
-            jsonData = json.loads(download_blob2('Coding_Test_Qns/'+key+'/'+qn+'.json','internship'))
+            # jsonData = json.loads(download_blob2('Coding_Test_Qns/'+key+'/'+qn+'.json','internship'))
+            jsonData = (find_blob_name(key,qn))
             if key == 'HTML':
                 jsonData.update({'User_HTML_ans':useranss.get('HTML'),'User_CSS_ans':useranss.get('CSS')})
             elif key == 'SQL':
