@@ -35,7 +35,7 @@ urlpatterns = [
     path ('js/',js.js_Score ),
     path ('runpy/',ex_py.run_python ),
     path('duration/',cod.Coding_duration),
-
-
+    path('code/backup/',cod.code_backup),
+    path('stat/',cod.submitedStatus),
 
 ]

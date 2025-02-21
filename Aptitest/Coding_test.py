@@ -27,15 +27,87 @@ def find_blob_name(sub,Qn_name):
         data =  JSONDATA_SQL
     for i in data:
         if i.get('Qn_name') == Qn_name:
-            print(i.get('Qn_name'),i)
+            # print(i.get('Qn_name'),i)
             return i 
+@api_view(['POST'])
+def submitedStatus(request):
+    try:
+        mainuser = Test_UserDetails.objects.get(UID = request.data.get('UID'))
+        stat = {}
+        list1 = mainuser.Coding_Questions
+        for i in list1:
+           
+                if str(i)[1] == 'H':
+                    if mainuser.Coding_Questions_status.get(i) == 2:
+                        stat.update({'HTML':True})
+                    else:
+                        stat.update({'HTML':False})
+                elif str(i)[1] == 'J':
+                    if mainuser.Coding_Questions_status.get(i) == 2:
+                        stat.update({'JS':True})
+                    else:
+                        stat.update({'JS':False})
+                elif str(i)[1] == 'P':
+                    if mainuser.Coding_Questions_status.get(i) == 2:
+                        stat.update({'Python':True})
+                    else:
+                        stat.update({'Python':False})
+                elif str(i)[1] == 'S':
+                    if mainuser.Coding_Questions_status.get(i) == 2:
+                        stat.update({'SQL':True})
+                    else:
+                        stat.update({'SQL':False})
 
+        return HttpResponse(json.dumps({
+            'status': stat
+        }), content_type='application/json')
+    except Exception as e:
+        return HttpResponse(json.dumps({
+            'status': 'error',
+            'data': str(e)}), content_type='application/json')
+@api_view(['POST'])
+def code_backup(req):
+    try:
+        data = json.loads(req.body)
+        mainuser = Test_UserDetails.objects.get(UID = req.data.get('UID'))
+        # print(mainuser.Coding_Questions_status.get(data.get('Qn')))
+        if mainuser.Coding_Questions_status.get(data.get('Qn')) == 2:
+            return HttpResponse(json.dumps({
+                'status': 'Already submitted'}), content_type='application/json')
+        code = data.get('code')
+        user = QuestionDetails_Days.objects.filter(Student_id=str(data.get("UID")),Subject=str(data.get("Subject")),Qn=str(data.get("Qn"))).first()
+        if user:
+            user.Ans = code
+            user.save()
+            return HttpResponse(json.dumps({
+                'status': 'success',
+            }), content_type='application/json')
+        else:
+            q = QuestionDetails_Days(
+                    Student_id=str(data.get("UID")),
+                    Subject=str(data.get("Subject")),
+                    Score=0,
+                    Attempts=0,
+                    StartTime =datetime.utcnow().__add__(timedelta(hours=5,minutes=30)),
+                    EndTime =datetime.utcnow().__add__(timedelta(hours=5,minutes=30)),
+                    Qn = str(data.get("Qn")),
+                    Ans =code,
+                    Result = {}
+                    )
+            q.save()
+        return HttpResponse(json.dumps({
+            'status': 'success',
+            }), content_type='application/json')
+    except Exception as e:
+        return HttpResponse(json.dumps({
+            'status': 'error',
+            'data': str(e)}), content_type='application/json')  
 @api_view(['PUT']) 
 def add_coding_test_questions(request):
     try:
         data = json.loads(request.body)
         list_of_users = data.get('users_ids')
-        users = Test_UserDetails.objects.filter(UID__in = list_of_users)
+        users = Test_UserDetails.objects.filter(Email__in = list_of_users)
         for u in users:
              # HTML
              HTMLQN= U_Qns('HTML')
@@ -51,7 +123,7 @@ def add_coding_test_questions(request):
              u.Coding_Questions.append(PYQN)
              u.Coding_Questions_status.update({ j:0 for j in u.Coding_Questions})
              u.save()
-             print('user:',u.UID,u.Coding_Questions)
+            #  print('user:',u.Email,u.Coding_Questions)
  
         return HttpResponse(json.dumps({
             'status': 'success',
@@ -234,7 +306,7 @@ def add_daysQN_db(data):
         mainuser.Duration +=( datetime.utcnow().replace(tzinfo=timezone.utc) + timedelta(hours=5, minutes=30)-mainuser.Last_update).total_seconds()
         mainuser.Last_update=datetime.utcnow().__add__(timedelta(hours=5,minutes=30))
         mainuser.save()
-        mainuser.save()
+        # mainuser.save()
         return ({"status": "success"})
     except Exception as e:
         return ({"status": "error", "message": str(e)})
