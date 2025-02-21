@@ -26,7 +26,7 @@ urlpatterns = [
     path('questions/submit/',ex.submit_answer),
     path('test/submit/',ex.logout),
     path('test/report/',ex.report),
-    # path('add/coding/',cod.add_coding_test_questions),
+    path('add/coding/',cod.add_coding_test_questions),
     path('get/coding/',cod.get_Questions),
     path ('runsql/',sql.sql_query ),
     path ('submit/',cod.submit ),

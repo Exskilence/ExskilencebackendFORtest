@@ -8,72 +8,71 @@ from .sqlrun import get_tables
 from .views import UpdateStatus
 from ExskilenceTest.Blob_service import *
 
-# def get_coding_test_questions():
-#     try:
-# added = {
-#     'SQL':[],'JS':[],'HTML':[],'Python':[]
-# }
-# JSONDATA_SQL = download_list_blob2('Coding_Test_Qns/SQL/','','internship')
-# JSONDATA_HTML = download_list_blob2('Coding_Test_Qns/HTML/','','internship')
-# JSONDATA_JS = download_list_blob2('Coding_Test_Qns/JS/','','internship')
-# JSONDATA_PY = download_list_blob2('Coding_Test_Qns/Python/','','internship')
 
-# @api_view(['PUT']) 
-# def add_coding_test_questions(request):
-#     try:
-#         data = json.loads(request.body)
-#         list_of_users = data.get('users_ids')
-#         users = Test_UserDetails.objects.filter(UID__in = list_of_users)
-#         for u in users:
-#              # HTML
-#              HTMLQN= U_Qns('HTML')
-#              u.Coding_Questions.append(HTMLQN)
-#              # JS
-#              JSQN= U_Qns('JS')
-#              u.Coding_Questions.append(JSQN)
-#              # SQL
-#              qn= sql_Qns()
-#              u.Coding_Questions.append(qn)
-#              # Python
-#              PYQN= U_Qns('Python')
-#              u.Coding_Questions.append(PYQN)
-#              u.Coding_Questions_status.update({ j:0 for j in u.Coding_Questions})
-#              u.save()
-#              print('user:',u.UID,u.Coding_Questions)
+added = {
+    'SQL':[],'JS':[],'HTML':[],'Python':[]
+}
+JSONDATA_SQL = download_list_blob2('Coding_Test_Qns/SQL/','','internship')
+JSONDATA_HTML = download_list_blob2('Coding_Test_Qns/HTML/','','internship')
+JSONDATA_JS = download_list_blob2('Coding_Test_Qns/JS/','','internship')
+JSONDATA_PY = download_list_blob2('Coding_Test_Qns/Python/','','internship')
+
+@api_view(['PUT']) 
+def add_coding_test_questions(request):
+    try:
+        data = json.loads(request.body)
+        list_of_users = data.get('users_ids')
+        users = Test_UserDetails.objects.filter(UID__in = list_of_users)
+        for u in users:
+             # HTML
+             HTMLQN= U_Qns('HTML')
+             u.Coding_Questions.append(HTMLQN)
+             # JS
+             JSQN= U_Qns('JS')
+             u.Coding_Questions.append(JSQN)
+             # SQL
+             qn= sql_Qns()
+             u.Coding_Questions.append(qn)
+             # Python
+             PYQN= U_Qns('Python')
+             u.Coding_Questions.append(PYQN)
+             u.Coding_Questions_status.update({ j:0 for j in u.Coding_Questions})
+             u.save()
+             print('user:',u.UID,u.Coding_Questions)
  
-#         return HttpResponse(json.dumps({
-#             'status': 'success',
-#             }), content_type='application/json')
-#     except Exception as e:
-#         return HttpResponse(json.dumps({
-#             'status': 'error',
-#             'data': str(e)}), content_type='application/json')
+        return HttpResponse(json.dumps({
+            'status': 'success',
+            }), content_type='application/json')
+    except Exception as e:
+        return HttpResponse(json.dumps({
+            'status': 'error',
+            'data': str(e)}), content_type='application/json')
     
-# def sql_Qns():
-#         Qnslist = random.sample(JSONDATA_SQL, len(JSONDATA_SQL))
-#         l2=[j.get('Qn_name')for j in Qnslist]
-#         if len(added.get('SQL'))==len(Qnslist):
-#             added.update({'SQL':[]})
-#         while l2[0] in added.get('SQL'):
-#             l2 = random.sample(l2, len(l2))
-#         added.get('SQL').append(l2[0])
-#         qn= l2[0]
-#         return qn
+def sql_Qns():
+        Qnslist = random.sample(JSONDATA_SQL, len(JSONDATA_SQL))
+        l2=[j.get('Qn_name')for j in Qnslist]
+        if len(added.get('SQL'))==len(Qnslist):
+            added.update({'SQL':[]})
+        while l2[0] in added.get('SQL'):
+            l2 = random.sample(l2, len(l2))
+        added.get('SQL').append(l2[0])
+        qn= l2[0]
+        return qn
 
-# def U_Qns(sub):
-#      if sub == 'HTML':
-#         data =  JSONDATA_HTML
-#      elif sub == 'JS':
-#         data =  JSONDATA_JS
-#      elif sub == 'Python':
-#         data =  JSONDATA_PY
-#      Qnslist = random.sample(data, len(data))
-#      l2=[j.get('Qn_name')for j in Qnslist]
-#      while l2[0] in added.get(sub):
-#             l2 = random.sample(l2, len(l2))
-#      added.get(sub).append(l2[0])
-#      qn= l2[0]
-#      return qn
+def U_Qns(sub):
+     if sub == 'HTML':
+        data =  JSONDATA_HTML
+     elif sub == 'JS':
+        data =  JSONDATA_JS
+     elif sub == 'Python':
+        data =  JSONDATA_PY
+     Qnslist = random.sample(data, len(data))
+     l2=[j.get('Qn_name')for j in Qnslist]
+     while l2[0] in added.get(sub):
+            l2 = random.sample(l2, len(l2))
+     added.get(sub).append(l2[0])
+     qn= l2[0]
+     return qn
 
 @api_view(['POST']) 
 def get_Questions(request):
@@ -115,9 +114,12 @@ def get_Questions(request):
                 jsonData.update({'User_SQL_ans':useranss.get('SQL'),'Qn_Tables':tabs })
             else:
                 jsonData.update({'User_ans':useranss.get(key)})
+            jsonData.update({ "Qn_name": qn})
             AllQns.append(jsonData)
         print('ss')
         user.Coding_Test_status='Started'
+        if user.Last_update is None:
+            user.Last_update= datetime.utcnow().replace(tzinfo=timezone.utc) + timedelta(hours=5, minutes=30)
         user.Duration +=( datetime.utcnow().replace(tzinfo=timezone.utc) + timedelta(hours=5, minutes=30)-user.Last_update).total_seconds()
         user.Last_update=datetime.utcnow().__add__(timedelta(hours=5,minutes=30))
         user.save()
