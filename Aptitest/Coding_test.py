@@ -158,23 +158,23 @@ def submit(request)  :
     except Exception as e:
         return HttpResponse(json.dumps({'Error':str(e)}), content_type='application/json')
 def Scoring_logic(passedcases,data):
-    attempt = data.get("Attempt")
-    if data.get("Subject") == "Python":
-        user = QuestionDetails_Days.objects.filter(Student_id=str(data.get("UID")),Subject=str(data.get("Subject")),Qn=str(data.get("Qn"))).first()
+    # attempt = data.get("Attempt")
+    # if data.get("Subject") == "Python":
+    #     user = QuestionDetails_Days.objects.filter(Student_id=str(data.get("UID")),Subject=str(data.get("Subject")),Qn=str(data.get("Qn"))).first()
 
-        if user :
+    #     if user :
 
-            attempt = user.Attempts
+    #         attempt = user.Attempts
 
-        else:
+    #     else:
 
-            attempt = 1
+    attempt = 1
     attempt_scores = {
     "E": {1: 5, 2: 5, 3: 3, 4: 2},
     "M": {1: 10, 2: 10, 3: 10,  4: 8, 5: 6, 6: 4, 7: 2},
     "H": {1: 15, 2: 15, 3: 15, 4: 15 ,5: 15, 6: 12, 7: 12, 8: 10, 9: 8, 10: 6, 11: 4, 12: 2},
     }
-    qn_type = str(data.get('Qn'))[-4]
+    qn_type = 'M'#'str(data.get('Qn'))[-4]'
     score = attempt_scores.get(qn_type, {}).get(attempt, 0)
     # #(score)
     return   round(score*passedcases ,2)
