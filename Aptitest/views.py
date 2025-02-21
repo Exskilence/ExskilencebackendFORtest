@@ -45,7 +45,8 @@ def login (request):
                 'status': 'Test Completed'
                 }), content_type='application/json')
             return HttpResponse(json.dumps({
-                'status': 'success'
+                'status': 'success',
+                'UID':  user.UID
                 }), content_type='application/json')
         else:
             return HttpResponse(json.dumps({

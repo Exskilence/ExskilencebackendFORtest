@@ -4,6 +4,7 @@ import random
 from django.http import HttpResponse, JsonResponse
 from rest_framework.decorators import api_view
 from Aptitest.models import *
+from .sqlrun import get_tables
 from .views import UpdateStatus
 from ExskilenceTest.Blob_service import *
 
@@ -109,6 +110,9 @@ def get_Questions(request):
             jsonData = json.loads(download_blob2('Coding_Test_Qns/'+key+'/'+qn+'.json','internship'))
             if key == 'HTML':
                 jsonData.update({'User_HTML_ans':useranss.get('HTML'),'User_CSS_ans':useranss.get('CSS')})
+            elif key == 'SQL':
+                tabs =  get_tables(jsonData.get('Table'))
+                jsonData.update({'User_SQL_ans':useranss.get('SQL'),'Qn_Tables':tabs })
             else:
                 jsonData.update({'User_ans':useranss.get(key)})
             AllQns.append(jsonData)
