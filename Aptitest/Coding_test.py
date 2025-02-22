@@ -217,7 +217,7 @@ def get_Questions(request):
             'status': 'success',
             'duration': user.Duration,
             # 'created': created,
-            'user_on' :userOn if userOn is not None else "completed",
+            'user_on' :userOn if userOn is not None else 0,
             'data': AllQns}), content_type='application/json')
     except Exception as e:
         return HttpResponse(json.dumps({
