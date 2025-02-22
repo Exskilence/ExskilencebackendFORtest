@@ -170,6 +170,10 @@ def get_Questions(request):
             return HttpResponse(json.dumps({
                 'status': 'error',
                 'data': 'User not found', 'error':str(e)}), content_type='application/json')
+        if user.Coding_Test_status == 'Completed':
+            return HttpResponse(json.dumps({
+                'status': 'error',
+                'data': 'Test Already Completed'}), content_type='application/json')
         userOn = None
         for Qn in user.Coding_Questions:
             if user.Coding_Questions_status.get(Qn)== 0:
@@ -204,9 +208,9 @@ def get_Questions(request):
             AllQns.append(jsonData)
         print('ss')
         user.Coding_Test_status='Started'
-        if user.Last_update is None:
-            user.Last_update= datetime.utcnow().replace(tzinfo=timezone.utc) + timedelta(hours=5, minutes=30)
-        user.Duration +=( datetime.utcnow().replace(tzinfo=timezone.utc) + timedelta(hours=5, minutes=30)-user.Last_update).total_seconds()
+        # if user.Last_update is None:
+        #     user.Last_update= datetime.utcnow().replace(tzinfo=timezone.utc) + timedelta(hours=5, minutes=30)
+        # user.Duration +=( datetime.utcnow().replace(tzinfo=timezone.utc) + timedelta(hours=5, minutes=30)-user.Last_update).total_seconds()
         user.Last_update=datetime.utcnow().__add__(timedelta(hours=5,minutes=30))
         user.save()
         return HttpResponse(json.dumps({
