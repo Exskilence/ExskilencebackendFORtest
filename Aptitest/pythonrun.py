@@ -83,7 +83,7 @@ def run_python(request):
                 'Output':str(result)}}
 
             main.append(data)
-            addAttempts = addAttempt(studentId,Subject,Qn,Attempt,code_data)
+            addAttempts = addAttempt(studentId,Subject,Qn,Attempt,str(code+'\n'+callfunc))
             Output={'TestCases':main,
                     'Attempt':addAttempts
                     }
