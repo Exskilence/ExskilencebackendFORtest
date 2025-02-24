@@ -34,6 +34,10 @@ def submitedStatus(request):
     try:
         mainuser = Test_UserDetails.objects.get(UID = request.data.get('UID'))
         stat = {}
+        if mainuser.Coding_Test_status == 'Completed':
+            return HttpResponse(json.dumps({
+                'status': 'Completed'
+            }), content_type='application/json')
         list1 = mainuser.Coding_Questions
         for i in list1:
            
