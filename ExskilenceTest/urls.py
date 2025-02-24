@@ -37,5 +37,6 @@ urlpatterns = [
     path('duration/',cod.Coding_duration),
     path('code/backup/',cod.code_backup),
     path('stat/',cod.submitedStatus),
+    path('update/',cod.update_jason),
 
 ]

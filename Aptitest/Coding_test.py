@@ -16,6 +16,22 @@ JSONDATA_SQL = download_list_blob2('Coding_Test_Qns/SQL/','','internship')
 JSONDATA_HTML = download_list_blob2('Coding_Test_Qns/HTML/','','internship')
 JSONDATA_JS = download_list_blob2('Coding_Test_Qns/JS/','','internship')
 JSONDATA_PY = download_list_blob2('Coding_Test_Qns/Python/','','internship')
+
+@ api_view(['GET'])
+def update_jason(req):
+    global JSONDATA_SQL, JSONDATA_HTML, JSONDATA_JS, JSONDATA_PY
+    try:
+        JSONDATA_SQL = download_list_blob2('Coding_Test_Qns/SQL/','','internship')
+        JSONDATA_HTML = download_list_blob2('Coding_Test_Qns/HTML/','','internship')
+        JSONDATA_JS = download_list_blob2('Coding_Test_Qns/JS/','','internship')
+        JSONDATA_PY = download_list_blob2('Coding_Test_Qns/Python/','','internship')
+        return HttpResponse(json.dumps({
+            'status': 'success',
+        }), content_type='application/json')
+    except Exception as e:
+        return HttpResponse(json.dumps({
+            'status': 'error',
+            'data': str(e)}), content_type='application/json')
 def find_blob_name(sub,Qn_name):
     if sub == 'HTML':
         data =  JSONDATA_HTML
