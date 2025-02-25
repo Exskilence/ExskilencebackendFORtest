@@ -350,7 +350,7 @@ def Coding_duration(req):
                 'status': 'error',
                 'data': 'User not found', 'error':str(e)}), content_type='application/json')
         if user.Last_update is None:
-            user.Last_update= datetime.utcnow().__add__(timedelta(hours=5,minutes=30))
+            user.Last_update= datetime.utcnow().replace(tzinfo=timezone.utc) + timedelta(hours=5, minutes=30)
         now = datetime.utcnow().replace(tzinfo=timezone.utc) + timedelta(hours=5, minutes=30)
         user.Duration += (now-user.Last_update).total_seconds()
         user.Last_update = datetime.utcnow().__add__(timedelta(hours=5,minutes=30))
