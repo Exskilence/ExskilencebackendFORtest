@@ -356,7 +356,8 @@ def Coding_duration(req):
         user.Last_update = datetime.utcnow().__add__(timedelta(hours=5,minutes=30))
         user.save()
         return HttpResponse(json.dumps({
-            'status': 'success',}), content_type='application/json')
+            'status': 'success',
+            'duration':user.Duration}), content_type='application/json')
     except Exception as e:
         return HttpResponse(json.dumps({'Error':str(e)}), content_type='application/json')
    
