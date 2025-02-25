@@ -9,7 +9,7 @@ from ExskilenceTest.Blob_service import *
 ONTIME = ONTIME = datetime.utcnow().__add__(timedelta(hours=5,minutes=30))
 @api_view(['GET'])   
 def home(request):
-    return HttpResponse(json.dumps({'Message': 'Welcome to the Home Page of STAGING By RK :--'+str(ONTIME)}), content_type='application/json')
+    return HttpResponse(json.dumps({'Message': 'Welcome to the Home Page of thoughtprocess online test By RK :--'+str(ONTIME)}), content_type='application/json')
 @api_view(['POST'])
 def AddUsers(request):
     try:

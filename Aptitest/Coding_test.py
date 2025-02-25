@@ -327,6 +327,9 @@ def add_daysQN_db(data):
         if mainuser.Coding_Questions_status.get(data.get("Qn")) <2:
                 mainuser.Coding_Score  = mainuser.Coding_Score + score
                 mainuser.Coding_Questions_status.update({data.get("Qn"):2})
+        elif data.get("Subject") == 'HTML' or data.get("Subject") == 'CSS' :
+            mainuser.Coding_Score  = mainuser.Coding_Score + score
+             
         mainuser.Duration +=( datetime.utcnow().replace(tzinfo=timezone.utc) + timedelta(hours=5, minutes=30)-mainuser.Last_update).total_seconds()
         mainuser.Last_update=datetime.utcnow().__add__(timedelta(hours=5,minutes=30))
         mainuser.save()
