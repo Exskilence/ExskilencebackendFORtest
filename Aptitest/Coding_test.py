@@ -231,7 +231,7 @@ def get_Questions(request):
         # if user.Last_update is None:
         #     user.Last_update= datetime.utcnow().replace(tzinfo=timezone.utc) + timedelta(hours=5, minutes=30)
         # user.Duration +=( datetime.utcnow().replace(tzinfo=timezone.utc) + timedelta(hours=5, minutes=30)-user.Last_update).total_seconds()
-        user.Last_update=datetime.utcnow().__add__(timedelta(hours=5,minutes=30))
+        # user.Last_update=datetime.utcnow().__add__(timedelta(hours=5,minutes=30))
         user.save()
         return HttpResponse(json.dumps({
             'status': 'success',
