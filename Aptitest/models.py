@@ -24,7 +24,7 @@ class Test_UserDetails (models.Model):
     Coding_Questions = models.JSONField(default=list)
     Coding_Questions_status = models.JSONField(default=dict)
     Score = models.IntegerField(default=0)
-    Coding_Score = models.IntegerField(default=0)
+    Coding_Score = models.FloatField(default=0)
     Test_status = models.CharField(max_length=25,default='Not_Started')
     Coding_Test_status = models.CharField(max_length=25,default='Not_Started')
     Duration = models.IntegerField(default=0)
