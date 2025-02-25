@@ -228,8 +228,8 @@ def get_Questions(request):
             AllQns.append(jsonData)
         print('ss')
         user.Coding_Test_status='Started'
-        # if user.Last_update is None:
-        #     user.Last_update= datetime.utcnow().replace(tzinfo=timezone.utc) + timedelta(hours=5, minutes=30)
+        if user.Last_update is not None:
+            user.Last_update= datetime.utcnow().replace(tzinfo=timezone.utc) + timedelta(hours=5, minutes=30)
         # user.Duration +=( datetime.utcnow().replace(tzinfo=timezone.utc) + timedelta(hours=5, minutes=30)-user.Last_update).total_seconds()
         # user.Last_update=datetime.utcnow().__add__(timedelta(hours=5,minutes=30))
         user.save()
