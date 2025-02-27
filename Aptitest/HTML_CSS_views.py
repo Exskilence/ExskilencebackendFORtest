@@ -112,23 +112,23 @@ def tupletolist(css_tuples,tupleKeys):
 def css_compare(req    ):
     try:
         data = json.loads(req.body)
-        css_code = data['Ans']
-        keys=data['KEYS']
-        css_tuples_a = css_to_tuples("",keys)
-        css_tuples_b = css_to_tuples(css_code,'')
-        # print('key',css_tuples_a)
-        # print('***********')
-        # print('code',css_tuples_b)
-        common_keywords = tupletolist(css_tuples_b,css_tuples_a)
-        # print('***********')
-        # print(common_keywords)
+        # css_code = data['Ans']
+        # keys=data['KEYS']
+        # css_tuples_a = css_to_tuples("",keys)
+        # css_tuples_b = css_to_tuples(css_code,'')
+        # # print('key',css_tuples_a)
+        # # print('***********')
+        # # print('code',css_tuples_b)
+        # common_keywords = tupletolist(css_tuples_b,css_tuples_a)
+        # # print('***********')
+        # # print(common_keywords)
         output={}
-        if len(common_keywords) == len(css_tuples_a):
-           output.update({"valid": True,"message": "CSS code is valid."})
-        else:
-            output.update({"valid": False,"message": "CSS code is Not valid."})
-        score = f'{len(common_keywords) }/{len(css_tuples_a) }'
-        data.update({"Score": f'{len(css_tuples_a) }/{len(css_tuples_a) }' if len(common_keywords) > len(css_tuples_a) else f'{len(common_keywords) }/{len(css_tuples_a) }',"Result":score})
+        # if len(common_keywords) == len(css_tuples_a):
+        output.update({"valid": True,"message": "CSS code is valid."})
+        # else:
+        #     output.update({"valid": False,"message": "CSS code is Not valid."})
+        score = f'0/0'
+        data.update({"Score": f'0/0' ,"Result":'-/-'})
         if data.get('UID') == 'trainer':
             res = 'No data'
         else:
@@ -137,7 +137,7 @@ def css_compare(req    ):
             resStatuses = "No"
         else:
             resStatuses = "Yes"
-        output.update({"score": score,"Res":res, "CSSStatuses":resStatuses})
+        output.update({"score": '-/-',"Res":"-/-", "CSSStatuses":resStatuses})
         return HttpResponse(json.dumps(output), content_type='application/json')
         # return JsonResponse(output)
     except Exception as e:
@@ -297,75 +297,9 @@ def html_page(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            htmlcode = data.get('Ans')
-            keys=data.get('KEYS')
-            if not htmlcode:
-                output = {"valid": False,"message": "No HTML code provided"}
-                sample_elements=(jsonToTuple(keys))
-                score = f'0/{len(sample_elements) }'
-                data.update({"Score": score,"Result":score})
-                if data.get("StudentId") == 'trainer':
-                    output.update({"score": score,"Res":'No data'})
-                else:
-                    res= add_daysQN_db(data)
-                    output.update({"score": score,"Res":res})
-                return HttpResponse(json.dumps(output), content_type='application/json')
-                # return JsonResponse(output, safe=False)
-            
-            user_soup = BeautifulSoup(htmlcode, 'html.parser')
-            def extract_tags_and_attributes(soup):
-                elements = soup.find_all(True)
-                tag_attr_list = []
-
-                for element in elements:
-                    tag = element.name
-                    attrs = element.attrs
-                    
-                    if attrs:
-                        for attr_name, attr_value in attrs.items():
-                            tag_attr_list.append((tag, attr_name, attr_value))
-                    else:
-                        tag_attr_list.append((tag, None, None))
-                tag_attr_list=[
-                (tag.lower().replace(" ", "").replace(" =", "=").replace("= ", "=").replace(" ,", ",").replace(", ", ","), attr.lower().replace(" ", "").replace(" =", "=").replace("= ", "=").replace(" ,", ",").replace(", ", ",") if isinstance(attr, str) else attr, 
-                 [value.lower().replace(" ", "").replace(" =", "=").replace("= ", "=").replace(" ,", ",").replace(", ", ",") if isinstance(value, str) else value for value in (value if isinstance(value, list) else [value])])
-                for tag, attr, value in tag_attr_list
-                ]
-                tag_attr_list=[
-                        (tag, attr, value) 
-                        for tag, attr, values in tag_attr_list 
-                        for value in (values if isinstance(values, list) else [values])
-                    ]
-                return tag_attr_list
-
-            sample_elements=(jsonToTuple(keys))
-            # print('sample',sample_elements)
-            # print('***************')
-            if HTMLStructure(htmlcode) == True:
-                user_elements = extract_tags_and_attributes(user_soup)
-                common_keywords = [i for i in user_elements if i in sample_elements]
-                headbodydata = extract_tag_content(htmlcode, ['head', 'body'])
-                bodydatavalid = alltags(headbodydata.get('body'), ['title', 'meta', 'link', 'style', 'script','head','html','body'], True)
-                if bodydatavalid == False  :
-                    common_keywords = []
-                    length = 0
-                else:
-                    length = len(common_keywords) - (0 if bodydatavalid == -1 else bodydatavalid)
-            else:
-                common_keywords = []
-                length = 0
-            # print(user_elements)
-            # common_keywords = [i for i in user_elements if i in sample_elements]
-            # print('***************')
-            # print(common_keywords)
             output = {}
-            if  length == len(sample_elements):
-                output.update({"valid": True,"message": "HTML code is valid."})
-            else:
-                output.update({"valid": False,"message": "HTML code is Not valid."})
-
-            score = f'{length }/{len(sample_elements) }'
-            data.update({"Score": f'{len(sample_elements) }/{len(sample_elements) }' if len(common_keywords) > len(sample_elements) else f'{len(common_keywords) }/{len(sample_elements) }',"Result":score})
+            output.update({"valid": True,"message": "HTML code is valid."})
+            data.update({"Score": '0/0' ,"Result":'-/-'})
             if data.get('StudentId') == 'trainer':
                 res= 'No data'
             else:
@@ -374,7 +308,7 @@ def html_page(request):
                 resStatuses = "No"
             else:
                 resStatuses = "Yes"
-            output.update({"score": score,"Res":res, "HTMLStatuses":resStatuses})
+            output.update({"score": '-/-',"Res":'-/-', "HTMLStatuses":resStatuses})
             return HttpResponse(json.dumps(output), content_type='application/json')
             # return JsonResponse(output, safe=False)
 

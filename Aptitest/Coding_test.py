@@ -283,8 +283,9 @@ def add_daysQN_db(data):
         totalcases = 0
         result = {}
         if data.get("Subject") == 'HTML' or data.get("Subject") == 'CSS' or data.get("Subject") == 'Java Script'or data.get("Subject") == 'JS':
-                requirements = int(str(data.get("Score")).split('/')[0])/int(str(data.get("Score")).split('/')[1])
-                score = Scoring_logic(requirements,{ "Attempt":1, "Qn":data.get("Qn") })
+                # requirements = int(str(data.get("Score")).split('/')[0])/int(str(data.get("Score")).split('/')[1])
+                # score = Scoring_logic(requirements,{ "Attempt":1, "Qn":data.get("Qn") })
+                score = 0
                 result = res
                 attempt = 1
         else:
@@ -302,7 +303,7 @@ def add_daysQN_db(data):
             else:
                 score = Scoring_logic(passedcases/totalcases,data)
         user = QuestionDetails_Days.objects.filter(Student_id=str(data.get("UID")),Subject=str(data.get("Subject")),Qn=str(data.get("Qn"))).first()
-       
+        
         mainuser  = Test_UserDetails.objects.get(UID = data.get('UID'))
         if user is  None:
             q = QuestionDetails_Days(
@@ -323,12 +324,14 @@ def add_daysQN_db(data):
             user.Ans = str(data.get("Ans"))
             user.Result = {"TestCases":result}
             user.save()
-        
-        if mainuser.Coding_Questions_status.get(data.get("Qn")) <2:
-                mainuser.Coding_Score  = mainuser.Coding_Score + score
-                mainuser.Coding_Questions_status.update({data.get("Qn"):2})
-        elif data.get("Subject") == 'HTML' or data.get("Subject") == 'CSS' :
-            mainuser.Coding_Score  = mainuser.Coding_Score + score
+        if data.get("Subject") == 'HTML' or data.get("Subject") == 'CSS' or data.get("Subject") == 'Java Script'or data.get("Subject") == 'JS':
+            mainuser.Coding_Questions_status.update({data.get("Qn"):2})
+        else:
+            if mainuser.Coding_Questions_status.get(data.get("Qn")) <2:
+                    mainuser.Coding_Score  = mainuser.Coding_Score + score
+                    mainuser.Coding_Questions_status.update({data.get("Qn"):2})
+            # elif data.get("Subject") == 'HTML' or data.get("Subject") == 'CSS' :
+            #     mainuser.Coding_Score  = mainuser.Coding_Score + score
              
         mainuser.Duration +=( datetime.utcnow().replace(tzinfo=timezone.utc) + timedelta(hours=5, minutes=30)-mainuser.Last_update).total_seconds()
         mainuser.Last_update=datetime.utcnow().__add__(timedelta(hours=5,minutes=30))

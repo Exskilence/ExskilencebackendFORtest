@@ -13,24 +13,24 @@ def run_test_js(request):
     try:
         data = json.loads(request.body.decode('utf-8'))
         js_code = data['Ans']
-        beautified_js1 = jsbeautifier.beautify(js_code)
-        d1 = beautified_js1.split('\n')
+        # beautified_js1 = jsbeautifier.beautify(js_code)
+        # d1 = beautified_js1.split('\n')
         # # print(d1)
         # for i in d1:
         #       print(i)
-        sam = data['KEYS']
+        # sam = data['KEYS']
         # print(sam)
-        ans = [a.replace(' ','').replace('"',"'") for key in sam for a in d1 if str(a.replace(' ','').replace('"',"'")).__contains__(key.replace(' ','').replace('"',"'"))]
+        # ans = [a.replace(' ','').replace('"',"'") for key in sam for a in d1 if str(a.replace(' ','').replace('"',"'")).__contains__(key.replace(' ','').replace('"',"'"))]
         # print(ans)
-        common_keywords = [i for i in sam if any(str(j).__contains__(str(i).replace(' ','').replace('"',"'")) for j in ans)]
+        # common_keywords = [i for i in sam if any(str(j).__contains__(str(i).replace(' ','').replace('"',"'")) for j in ans)]
         # print(common_keywords)
         output = {
-            "valid": len(common_keywords) == len(sam),
-            "message": "JS code is valid." if len(common_keywords) == len(sam) else "JS code is Not valid.",
-            "common":common_keywords,
-            'Failed': [{'keyword':i} for i in sam if not any(str(j).__contains__(str(i).replace(' ','').replace('"',"'")) for j in ans)]
+            "valid": '-/-',
+            "message": "JS code is valid." ,
+            "common":'-/-',
+            'Failed': '-/-', #[{'keyword':i} for i in sam if not any(str(j).__contains__(str(i).replace(' ','').replace('"',"'")) for j in ans)]
         }
-        score = f'{len(common_keywords) }/{len(sam) }'
+        score = f'-/-'
         data.update({"Score": score,"Result":score})
         res= add_daysQN_db(data)
         # print('database',res)
@@ -50,20 +50,16 @@ def run_test_js(request):
 def  js_Score(request):
     try:
         data = json.loads(request.body.decode('utf-8'))
-        js_code = data['Ans']
-        score = data['Score']
-        data.update({"Score": score if int(str(score).split('/')[0])<=int(str(score).split('/')[1]) else str(score).split('/')[1]+"/"+str(score).split('/')[1],"Result":score})
-        print(data.get('Score'))        
+        data.update({"Score": '-/-' ,"Result":'-/-'})
         res= add_daysQN_db(data)
-        # print('database',res)
         if str(res).__contains__("An error occurred"):
                 resStatuses = "No"
         else:
                 resStatuses = "Yes"
         output = {
-            "valid": int(str(score).split('/')[0]) ==  int(str(score).split('/')[1]),
-            "message": "JS code is valid." if  int(str(score).split('/')[0]) ==  int(str(score).split('/')[1]) else "JS code is Not valid.",
-            "score": score,
+            "valid": '-/-',
+            "message": "JS code is valid." ,
+            "score": '-/-',
             "Res":res,
             "JSStatuses":resStatuses
         }
