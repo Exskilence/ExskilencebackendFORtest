@@ -89,14 +89,16 @@ def Test_duration(req):
             user.Last_update= datetime.utcnow().replace(tzinfo=timezone.utc) + timedelta(hours=5, minutes=30)
         now = datetime.utcnow().replace(tzinfo=timezone.utc) + timedelta(hours=5, minutes=30)
         if type == 'mcq': 
+            Duration = user.MCQ_duration
             user.MCQ_duration += (now-user.Last_update).total_seconds()
         else:
+            Duration = user.Coding_duration
             user.Coding_duration += (now-user.Last_update).total_seconds()
         user.Last_update = datetime.utcnow().__add__(timedelta(hours=5,minutes=30))
         user.save()
         return HttpResponse(json.dumps({
             'status': 'success',
-            'duration':user.Duration}), content_type='application/json')
+            'duration':Duration}), content_type='application/json')
     except Exception as e:
         return HttpResponse(json.dumps({'Error':str(e)}), content_type='application/json')
 # JSONDATA = download_list_blob('test_InterviewQuestion/','')
