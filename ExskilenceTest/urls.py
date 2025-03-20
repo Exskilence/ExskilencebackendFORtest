@@ -22,7 +22,7 @@ urlpatterns = [
     path ('', ex.home),
     path('add/users/', ex.AddUsers),
     path('login/', ex.login),
-    # path('get/questions/', ex.get_questions),
+    path('get/questions/', ex.get_questions),
     path('questions/submit/',ex.submit_answer),
     path('test/submit/',ex.logout),
     path('test/report/',ex.report),
@@ -38,5 +38,6 @@ urlpatterns = [
     path('code/backup/',cod.code_backup),
     path('stat/',cod.submitedStatus),
     path('update/',cod.update_jason),
+    path('update/mcq/',ex.updateJson),
 
 ]

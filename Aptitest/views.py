@@ -40,11 +40,11 @@ def login (request):
         email = data.get('email')
         user = Test_UserDetails.objects.get(Email = email)
         if user:
-            # if user.Name != 'TEST':
-            #     return HttpResponse(json.dumps({
-            #         'status': 'error',
-            #         'data': 'User not found'
-            #     }), content_type='application/json')
+            if user.Name != 'TEST':
+                return HttpResponse(json.dumps({
+                    'status': 'error',
+                    'data': 'User not found'
+                }), content_type='application/json')
             if user.Coding_Test_status=='Completed':
                 return HttpResponse(json.dumps({
                 'status': 'Test Completed'
@@ -61,52 +61,58 @@ def login (request):
         return HttpResponse(json.dumps({
             'status': 'error',
             'data': 'User not found', 'error':str(e)}), content_type='application/json')
-# JSONDATA = download_list_blob('test_InterviewQuestion/','')
-# @api_view(['POST'])      
-# def get_questions(request):
-#     try:
-#         data = json.loads(request.body)
-#         email = data.get('email')
-#         try:
-#             user = Test_UserDetails.objects.get(Email = email)
-#         except Exception as e:
-#             return HttpResponse(json.dumps({
-#                 'status': 'error',
-#                 'data': 'User not found', 'error':str(e)}), content_type='application/json')
-#         qnsdata =  JSONDATA
-#         if user.Test_status == 'Completed':
-#             return HttpResponse(json.dumps({
-#                 'status': 'error',
-#                 'data': 'Test Already Completed'}), content_type='application/json')
-#         if user.Questions == []:
-#             Qns = [j.get('Qn_name') for j in qnsdata]
-#             Qnslist = random.sample(Qns, len(Qns))
-#             user.Questions = Qnslist  if len(Qnslist) > 30 else Qnslist
-#             user.Questions_status = { j:0 for j in user.Questions}
-#             user.Test_status = 'Started'
-#             user.save()
+JSONDATA = download_list_blob('test_InterviewQuestion/','')
+
+@api_view(['GET'])
+def updateJson(request):
+    global JSONDATA
+    JSONDATA = download_list_blob('test_InterviewQuestion/','')
+    return HttpResponse(json.dumps({'status': 'success'}), content_type='application/json') 
+@api_view(['POST'])      
+def get_questions(request):
+    try:
+        data = json.loads(request.body)
+        email = data.get('email')
+        try:
+            user = Test_UserDetails.objects.get(Email = email)
+        except Exception as e:
+            return HttpResponse(json.dumps({
+                'status': 'error',
+                'data': 'User not found', 'error':str(e)}), content_type='application/json')
+        qnsdata =  JSONDATA
+        if user.Test_status == 'Completed':
+            return HttpResponse(json.dumps({
+                'status': 'error',
+                'data': 'Test Already Completed'}), content_type='application/json')
+        if user.Questions == []:
+            Qns = [j.get('Qn_name') for j in qnsdata]
+            Qnslist = random.sample(Qns, len(Qns))
+            user.Questions = Qnslist  if len(Qnslist) > 30 else Qnslist
+            user.Questions_status = { j:0 for j in user.Questions}
+            user.Test_status = 'Started'
+            user.save()
             
-#         userOn = None
-#         for Qn in user.Questions:
-#             if user.Questions_status.get(Qn)== 0:
-#                 userOn = user.Questions.index(Qn) 
-#                 break
-#         if userOn >=0:
-#             created = UpdateStatus(user.UID,user.Questions[userOn]) if user.Questions_status.get(user.Questions[userOn])==0 else 'success'
-#         else:
-#             created =''
-#         arranged_list = sorted(qnsdata, key=lambda x: user.Questions.index(x['Qn_name']))
-#         # print(duration(user.UID))
-#         return HttpResponse(json.dumps({
-#             'status': 'success',
-#             'duration': duration(user.UID),
-#             'created': created,
-#             'user_on' :userOn if userOn is not None else "completed",
-#             'data': arranged_list}), content_type='application/json')
-#     except Exception as e:
-#         return HttpResponse(json.dumps({
-#             'status': 'error',
-#             'data': str(e)}), content_type='application/json')
+        userOn = None
+        for Qn in user.Questions:
+            if user.Questions_status.get(Qn)== 0:
+                userOn = user.Questions.index(Qn) 
+                break
+        if userOn >=0:
+            created = UpdateStatus(user.UID,user.Questions[userOn]) if user.Questions_status.get(user.Questions[userOn])==0 else 'success'
+        else:
+            created =''
+        arranged_list = sorted(qnsdata, key=lambda x: user.Questions.index(x['Qn_name']))
+        # print(duration(user.UID))
+        return HttpResponse(json.dumps({
+            'status': 'success',
+            'duration': duration(user.UID),
+            'created': created,
+            'user_on' :userOn if userOn is not None else "completed",
+            'data': arranged_list}), content_type='application/json')
+    except Exception as e:
+        return HttpResponse(json.dumps({
+            'status': 'error',
+            'data': str(e)}), content_type='application/json')
 
 def UpdateStatus(user_UID,next_Qn):
     try:
