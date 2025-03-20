@@ -5,7 +5,14 @@ from django.http import HttpResponse, JsonResponse
 from rest_framework.decorators import api_view
 from Aptitest.models import *
 from ExskilenceTest.Blob_service import *
-JSONDATA = []
+JSONDATA = download_list_blob('test_InterviewQuestion/NEWQns/','')
+
+@api_view(['GET'])
+def updateJson(request):
+    global JSONDATA
+    # JSONDATA = download_list_blob('test_InterviewQuestion/','')
+    JSONDATA = download_list_blob('test_InterviewQuestion/NEWQns/','')
+    return HttpResponse(json.dumps({'status': 'success'}), content_type='application/json') 
 
 def upjson(data):
     global JSONDATA
@@ -51,8 +58,8 @@ def get_questions(request):
             return HttpResponse(json.dumps({
                 'status': 'error',
                 'data': 'User not found', 'error':str(e)}), content_type='application/json')
-        if JSONDATA == []:
-            upjson({})
+        # if JSONDATA == []:
+        #     upjson({})
         qnsdata =  JSONDATA
         if user.Test_status == 'Completed':
             return HttpResponse(json.dumps({

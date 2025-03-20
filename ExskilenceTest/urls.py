@@ -47,6 +47,7 @@ urlpatterns = [
      path('questions/submit/',mcq.submit_answer),
      path('test/submit/',mcq.logout),
      path('test/report/',mcq.report),
+     path('update/mcq/',mcq.updateJson),
 
      # both
      path('duration/',ex.Test_duration),
