@@ -27,7 +27,9 @@ class Test_UserDetails (models.Model):
     Coding_Score = models.FloatField(default=0)
     Test_status = models.CharField(max_length=25,default='Not_Started')
     Coding_Test_status = models.CharField(max_length=25,default='Not_Started')
-    Duration = models.IntegerField(default=0)
+    # Duration = models.IntegerField(default=0)
+    MCQ_duration = models.IntegerField(default=0)
+    Coding_duration = models.IntegerField(default=0)
     Last_update = models.DateTimeField(default=None)
 
     class meta:

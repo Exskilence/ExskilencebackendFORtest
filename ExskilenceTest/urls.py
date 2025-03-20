@@ -17,15 +17,16 @@ from django.contrib import admin
 from django.urls import path
 from Aptitest import views as ex,Coding_test as cod,sqlviews as sql,pythonrun as ex_py
 from Aptitest import views as ex,HTML_CSS_views as html_css,js_views as js
+from Aptitest import MCQ_views  as mcq
 urlpatterns = [
     path('admin/', admin.site.urls),
     path ('', ex.home),
     path('add/users/', ex.AddUsers),
     path('login/', ex.login),
-    path('get/questions/', ex.get_questions),
-    path('questions/submit/',ex.submit_answer),
-    path('test/submit/',ex.logout),
-    path('test/report/',ex.report),
+    # path('get/questions/', ex.get_questions),
+    # path('questions/submit/',ex.submit_answer),
+    # path('test/submit/',ex.logout),
+    # path('test/report/',ex.report),
     path('add/coding/',cod.add_coding_test_questions),
     path('get/coding/',cod.get_Questions),
     path ('runsql/',sql.sql_query ),
@@ -34,10 +35,19 @@ urlpatterns = [
     path ('css/',html_css.css_compare ),
     path ('js/',js.js_Score ),
     path ('runpy/',ex_py.run_python ),
-    path('duration/',cod.Coding_duration),
+    # path('duration/',cod.Coding_duration),
     path('code/backup/',cod.code_backup),
     path('stat/',cod.submitedStatus),
-    path('update/',cod.update_jason),
-    path('update/mcq/',ex.updateJson),
+    # path('update/',cod.update_jason),
+    # path('update/mcq/',ex.updateJson),
 
+    # MCQ API
+     path('loginmcq/', mcq.login),
+     path('get/questions/', mcq.get_questions),
+     path('questions/submit/',mcq.submit_answer),
+     path('test/submit/',mcq.logout),
+     path('test/report/',mcq.report),
+
+     # both
+     path('duration/',ex.Test_duration),
 ]

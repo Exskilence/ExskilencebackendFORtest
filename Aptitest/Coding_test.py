@@ -5,18 +5,24 @@ from django.http import HttpResponse, JsonResponse
 from rest_framework.decorators import api_view
 from Aptitest.models import *
 from .sqlrun import get_tables
-from .views import UpdateStatus
+# from .views import UpdateStatus
 from ExskilenceTest.Blob_service import *
 
 
 added = {
     'SQL':[],'JS':[],'HTML':[],'Python':[]
 }
-JSONDATA_SQL = download_list_blob2('Coding_Test_Qns/SQL/','','internship')
-JSONDATA_HTML = download_list_blob2('Coding_Test_Qns/HTML/','','internship')
-JSONDATA_JS = download_list_blob2('Coding_Test_Qns/JS/','','internship')
-JSONDATA_PY = download_list_blob2('Coding_Test_Qns/Python/','','internship')
-
+JSONDATA_SQL = []#download_list_blob2('Coding_Test_Qns/SQL/','','internship')
+JSONDATA_HTML = []#download_list_blob2('Coding_Test_Qns/HTML/','','internship')
+JSONDATA_JS = []#download_list_blob2('Coding_Test_Qns/JS/','','internship')
+JSONDATA_PY = []#download_list_blob2('Coding_Test_Qns/Python/','','internship')
+def add_CodingJson(data):
+    global JSONDATA_SQL, JSONDATA_HTML, JSONDATA_JS, JSONDATA_PY
+    JSONDATA_SQL = data.get('JSONDATA_SQL',download_list_blob2('Coding_Test_Qns/SQL/','','internship'))
+    JSONDATA_HTML = data.get('JSONDATA_HTML',download_list_blob2('Coding_Test_Qns/HTML/','','internship'))
+    JSONDATA_JS = data.get('JSONDATA_JS',download_list_blob2('Coding_Test_Qns/JS/','','internship'))
+    JSONDATA_PY = data.get('JSONDATA_PY',download_list_blob2('Coding_Test_Qns/Python/','','internship'))
+    return 'success'
 @ api_view(['GET'])
 def update_jason(req):
     global JSONDATA_SQL, JSONDATA_HTML, JSONDATA_JS, JSONDATA_PY
@@ -235,7 +241,7 @@ def get_Questions(request):
         user.save()
         return HttpResponse(json.dumps({
             'status': 'success',
-            'duration': user.Duration,
+            'duration': user.Coding_duration,
             # 'created': created,
             'user_on' :userOn if userOn is not None else 0,
             'data': AllQns}), content_type='application/json')
@@ -333,7 +339,7 @@ def add_daysQN_db(data):
             # elif data.get("Subject") == 'HTML' or data.get("Subject") == 'CSS' :
             #     mainuser.Coding_Score  = mainuser.Coding_Score + score
              
-        mainuser.Duration +=( datetime.utcnow().replace(tzinfo=timezone.utc) + timedelta(hours=5, minutes=30)-mainuser.Last_update).total_seconds()
+        mainuser.Coding_duration +=( datetime.utcnow().replace(tzinfo=timezone.utc) + timedelta(hours=5, minutes=30)-mainuser.Last_update).total_seconds()
         mainuser.Last_update=datetime.utcnow().__add__(timedelta(hours=5,minutes=30))
         mainuser.save()
         # mainuser.save()
@@ -341,26 +347,26 @@ def add_daysQN_db(data):
     except Exception as e:
         return ({"status": "error", "message": str(e)})
     
-@api_view(['POST'])
-def Coding_duration(req):
-    try:
-        data = json.loads(req.body)
-        email = data.get('email')      
-        try:
-            user = Test_UserDetails.objects.get(Email = email)
-        except Exception as e:
-            return HttpResponse(json.dumps({
-                'status': 'error',
-                'data': 'User not found', 'error':str(e)}), content_type='application/json')
-        if user.Last_update is None:
-            user.Last_update= datetime.utcnow().replace(tzinfo=timezone.utc) + timedelta(hours=5, minutes=30)
-        now = datetime.utcnow().replace(tzinfo=timezone.utc) + timedelta(hours=5, minutes=30)
-        user.Duration += (now-user.Last_update).total_seconds()
-        user.Last_update = datetime.utcnow().__add__(timedelta(hours=5,minutes=30))
-        user.save()
-        return HttpResponse(json.dumps({
-            'status': 'success',
-            'duration':user.Duration}), content_type='application/json')
-    except Exception as e:
-        return HttpResponse(json.dumps({'Error':str(e)}), content_type='application/json')
+# @api_view(['POST'])
+# def Coding_duration(req):
+#     try:
+#         data = json.loads(req.body)
+#         email = data.get('email')      
+#         try:
+#             user = Test_UserDetails.objects.get(Email = email)
+#         except Exception as e:
+#             return HttpResponse(json.dumps({
+#                 'status': 'error',
+#                 'data': 'User not found', 'error':str(e)}), content_type='application/json')
+#         if user.Last_update is None:
+#             user.Last_update= datetime.utcnow().replace(tzinfo=timezone.utc) + timedelta(hours=5, minutes=30)
+#         now = datetime.utcnow().replace(tzinfo=timezone.utc) + timedelta(hours=5, minutes=30)
+#         user.Duration += (now-user.Last_update).total_seconds()
+#         user.Last_update = datetime.utcnow().__add__(timedelta(hours=5,minutes=30))
+#         user.save()
+#         return HttpResponse(json.dumps({
+#             'status': 'success',
+#             'duration':user.Duration}), content_type='application/json')
+#     except Exception as e:
+#         return HttpResponse(json.dumps({'Error':str(e)}), content_type='application/json')
    
