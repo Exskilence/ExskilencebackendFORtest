@@ -21,7 +21,7 @@ from Aptitest import MCQ_views  as mcq ,Traainer_views as trainer
 urlpatterns = [
     path('admin/', admin.site.urls),
     path ('', ex.home),
-    path('add/users/', ex.AddUsers),
+    
     path('login/', ex.login),
     # path('get/questions/', ex.get_questions),
     # path('questions/submit/',ex.submit_answer),
@@ -57,4 +57,6 @@ urlpatterns = [
      path('addtrainer/', trainer.AddTrainer),
      path ('delete/users/', trainer.Delete_users),
      path('fetch/users/', trainer.get_all_students),
+     path('add/users/', ex.AddUsers),
+     path('batch/filters/', trainer.Filers_available),
 ]

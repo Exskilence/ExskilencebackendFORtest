@@ -53,25 +53,31 @@ def Delete_users(request):
     try:
         data = json.loads(request.body)
         emails = data.get('emails')
-        users = Test_UserDetails.objects.filter(Email__in = emails)
+        # users = Test_UserDetails.objects.filter(Email__in = emails)
+        del_stds =[]
+        users = Test_UserDetails.objects.filter(Name = "TEST")
         for user in users:
             if user:
                 Qns_details = QuestionDetails_Days.objects.filter(Student_id=user.UID).delete()
                 apti_ans = Test_Attendance.objects.filter(UID = user.UID).delete()
+                del_stds.append(user.Email)
                 user.delete()
         return HttpResponse(json.dumps({
             'status': 'success',
-            'data': 'Users deleted'}), content_type='application/json')
+            'data': del_stds}), content_type='application/json')
         
     except Exception as e:
         return HttpResponse(json.dumps({
             'status': 'error',
             'data': 'User not found', 'error':str(e)}), content_type='application/json')
 
-@api_view(['GET'])
+@api_view(['POST'])
 def get_all_students(request):
     try:
-        users = list(Test_UserDetails.objects.exclude(Name="TEST").values('Name', 'Email', 'batch','College', 'Branch', 'Score', 'Test_status','Questions').order_by("-Score"))
+        data = json.loads(request.body)
+        Year = data.get('Year')
+        batch = data.get('batch')
+        users = list(Test_UserDetails.objects.filter(Year = Year,batch = batch).exclude(Name="TEST").values('Name', 'Email', 'batch','College', 'Branch', 'Score', 'Test_status','Questions').order_by("-Score"))
         for u in users:
             if u.get('Test_status') =='Not_Started':
                 u.update({'Test_status':"No","Score":'-',"Total_Score":len(u.get('Questions')),'Percentage': '0%'})
@@ -80,6 +86,18 @@ def get_all_students(request):
             u.pop('Questions')
         return HttpResponse(json.dumps({
             'data':  users}), content_type='application/json')
+        
+    except Exception as e:
+        return HttpResponse(json.dumps({
+            'status': 'error',
+            'data': 'User not found', 'error':str(e)}), content_type='application/json')
+@api_view(['GET'])  
+def  Filers_available(request):
+    try:
+        filters = list(Test_UserDetails.objects.values('Year', 'batch').order_by("-Year"))
+        response = {filter.get('Year'): [] for filter in filters}
+        {response.get(filter.get('Year',[])).append(filter.get('batch')) for filter in filters if filter.get('batch') not in response.get(filter.get('Year',[])) }
+        return HttpResponse(json.dumps(response), content_type='application/json')
         
     except Exception as e:
         return HttpResponse(json.dumps({

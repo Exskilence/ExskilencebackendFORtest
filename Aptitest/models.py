@@ -32,6 +32,7 @@ class Test_UserDetails (models.Model):
     Coding_duration = models.IntegerField(default=0)
     Last_update = models.DateTimeField(default=None)
     Created_on = models.DateTimeField()
+    Year = models.CharField(max_length=25)
     batch = models.CharField(max_length=25)
 
     class meta:

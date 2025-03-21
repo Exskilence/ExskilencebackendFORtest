@@ -34,12 +34,15 @@ def AddUsers(request):
                     College = user.get('College'),
                     Branch = user.get('Branch'),
                     batch = user.get('Batch'),
+                    Year = str(datetime.utcnow().year),
                     Created_on = datetime.utcnow().replace(tzinfo=timezone.utc) + timedelta(hours=5, minutes=30)
                 )
             except Exception as e:
                 notadded.append(user.get('Email'))
         return HttpResponse(json.dumps({
             'status': 'success',
+            'saved': len(userslist)-len(notadded),
+            'notadded': len(notadded),
             'data': notadded}), content_type='application/json')
     except Exception as e:
         return HttpResponse(json.dumps({
