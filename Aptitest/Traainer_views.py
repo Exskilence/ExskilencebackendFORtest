@@ -71,10 +71,15 @@ def Delete_users(request):
 @api_view(['GET'])
 def get_all_students(request):
     try:
-        users = list(Test_UserDetails.objects.values('Name', 'Email', 'College', 'Branch', 'Score', 'Test_status','Questions').order_by("-Score"))
+        users = list(Test_UserDetails.objects.exclude(Name="TEST").values('Name', 'Email', 'batch','College', 'Branch', 'Score', 'Test_status','Questions').order_by("-Score"))
+        for u in users:
+            if u.get('Test_status') =='Not_Started':
+                u.update({'Test_status':"No","Score":'-',"Total_Score":len(u.get('Questions')),'Percentage': '0%'})
+            else:
+                u.update({'Test_status':"Yes","Total_Score":len(u.get('Questions')),'Percentage': str(round((u.get('Score') / len(u.get('Questions'))) * 100, 2))+'%'})
+            u.pop('Questions')
         return HttpResponse(json.dumps({
-            'status': 'success',
-            'data': users}), content_type='application/json')
+            'data':  users}), content_type='application/json')
         
     except Exception as e:
         return HttpResponse(json.dumps({
