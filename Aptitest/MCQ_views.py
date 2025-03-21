@@ -25,11 +25,11 @@ def login (request):
         email = data.get('email')
         user = Test_UserDetails.objects.get(Email = email)
         if user:
-            if user.Name != 'TEST':
-                return HttpResponse(json.dumps({
-                    'status': 'error',
-                    'data': 'User not found'
-                }), content_type='application/json')
+            # if user.Name != 'TEST':
+            #     return HttpResponse(json.dumps({
+            #         'status': 'error',
+            #         'data': 'User not found'
+            #     }), content_type='application/json')
             if user.Test_status=='Completed':
                 return HttpResponse(json.dumps({
                 'status': 'Test Completed'
