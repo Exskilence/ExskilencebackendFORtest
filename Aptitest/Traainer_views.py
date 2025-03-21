@@ -53,9 +53,9 @@ def Delete_users(request):
     try:
         data = json.loads(request.body)
         emails = data.get('emails')
-        # users = Test_UserDetails.objects.filter(Email__in = emails)
+        users = Test_UserDetails.objects.filter(Email__in = emails)
         del_stds =[]
-        users = Test_UserDetails.objects.filter(Name = "TEST")
+        # users = Test_UserDetails.objects.filter(Name = "TEST")
         for user in users:
             if user:
                 Qns_details = QuestionDetails_Days.objects.filter(Student_id=user.UID).delete()

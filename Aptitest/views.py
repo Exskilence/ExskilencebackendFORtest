@@ -94,11 +94,11 @@ def Test_duration(req):
             user.Last_update= datetime.utcnow().replace(tzinfo=timezone.utc) + timedelta(hours=5, minutes=30)
         now = datetime.utcnow().replace(tzinfo=timezone.utc) + timedelta(hours=5, minutes=30)
         if type == 'mcq': 
-            Duration = user.MCQ_duration
             user.MCQ_duration += (now-user.Last_update).total_seconds()
+            Duration = user.MCQ_duration
         else:
-            Duration = user.Coding_duration
             user.Coding_duration += (now-user.Last_update).total_seconds()
+            Duration = user.Coding_duration
         user.Last_update = datetime.utcnow().__add__(timedelta(hours=5,minutes=30))
         user.save()
         return HttpResponse(json.dumps({

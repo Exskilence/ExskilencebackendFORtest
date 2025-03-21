@@ -72,8 +72,10 @@ def get_questions(request):
             user.Questions_status = { j:0 for j in user.Questions}
             user.Test_status = 'Started'
             user.Last_update = datetime.utcnow().replace(tzinfo=timezone.utc) + timedelta(hours=5, minutes=30)
-            user.save()
-            
+        else:
+            user.Last_update = datetime.utcnow().replace(tzinfo=timezone.utc) + timedelta(hours=5, minutes=30)
+        user.save()
+        
         userOn = None
         for Qn in user.Questions:
             if user.Questions_status.get(Qn)== 0:
@@ -84,7 +86,7 @@ def get_questions(request):
         else:
             created =''
         arranged_list = sorted(qnsdata, key=lambda x: user.Questions.index(x['Qn_name']))
-        duration(user.UID)
+        # duration(user.UID)
         return HttpResponse(json.dumps({
             'status': 'success',
             'duration': user.MCQ_duration,
