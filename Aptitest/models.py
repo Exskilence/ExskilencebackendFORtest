@@ -31,6 +31,8 @@ class Test_UserDetails (models.Model):
     MCQ_duration = models.IntegerField(default=0)
     Coding_duration = models.IntegerField(default=0)
     Last_update = models.DateTimeField(default=None)
+    Created_on = models.DateTimeField()
+    batch = models.CharField(max_length=25)
 
     class meta:
         db_table = 'Test_UserDetails'
@@ -49,3 +51,12 @@ class QuestionDetails_Days(models.Model):
 
     class meta:
         db_table = 'Test_Coding_details'
+
+class Trainer_details(models.Model):
+    UID = models.AutoField(primary_key=True)
+    Name = models.CharField(max_length=25)
+    Email = models.CharField(max_length=25,unique=True)
+    Created_on = models.DateTimeField(auto_now_add=True)
+    Category = models.CharField(max_length=25,default='Trainer')
+    class meta:
+        db_table = 'Trainer_details'

@@ -33,6 +33,8 @@ def AddUsers(request):
                     Email = user.get('Email'),
                     College = user.get('College'),
                     Branch = user.get('Branch'),
+                    batch = user.get('Batch'),
+                    Created_on = datetime.utcnow().replace(tzinfo=timezone.utc) + timedelta(hours=5, minutes=30)
                 )
             except Exception as e:
                 notadded.append(user.get('Email'))
@@ -101,6 +103,8 @@ def Test_duration(req):
             'duration':Duration}), content_type='application/json')
     except Exception as e:
         return HttpResponse(json.dumps({'Error':str(e)}), content_type='application/json')
+    
+
 # JSONDATA = download_list_blob('test_InterviewQuestion/','')
 # JSONDATA = []
 

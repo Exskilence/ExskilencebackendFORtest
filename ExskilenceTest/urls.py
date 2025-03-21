@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path
 from Aptitest import views as ex,Coding_test as cod,sqlviews as sql,pythonrun as ex_py
 from Aptitest import views as ex,HTML_CSS_views as html_css,js_views as js
-from Aptitest import MCQ_views  as mcq
+from Aptitest import MCQ_views  as mcq ,Traainer_views as trainer
 urlpatterns = [
     path('admin/', admin.site.urls),
     path ('', ex.home),
@@ -51,4 +51,10 @@ urlpatterns = [
 
      # both
      path('duration/',ex.Test_duration),
+
+     # Traier API 
+     path('logintrainer/', trainer.Trainer_login),
+     path('addtrainer/', trainer.AddTrainer),
+     path ('delete/users/', trainer.Delete_users),
+     path('fetch/users/', trainer.get_all_students),
 ]
