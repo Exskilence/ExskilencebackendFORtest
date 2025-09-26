@@ -1,0 +1,54 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+env/
+venv/
+ENV/
+.venv/
+
+# Django SQLite DB
+*.sqlite3
+
+
+# VSCode project settings
+.vscode/
+
+# PyCharm project settings
+.idea/
+
+# Migrations (optional - keep if you want history)
+**/migrations/__pycache__/
+**/migrations/*.py[cod]
+
+# Node stuff (if any frontend is here)
+node_modules/
+
+# Log files
+*.log
+
+# Python test coverage
+htmlcov/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+
+# mypy
+.mypy_cache/
+
+# Pytest
+.pytest_cache/
+
+# Build files
+build/
+dist/
+*.egg-info/
+
+# Docker
+*.pid
