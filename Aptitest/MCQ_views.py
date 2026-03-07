@@ -194,12 +194,13 @@ def logout(request):
 @api_view(['GET'])
 def report(requrst):
     try:
+        total_questions = len(JSONDATA)
         users = list(Test_UserDetails.objects.exclude(Name="TEST").values('Name', 'Email', 'College', 'Branch', 'Score', 'Test_status','Questions').order_by("-Score"))
         for u in users:
             if u.get('Test_status') =='Not_Started':
-                u.update({'Test_status':"No","Score":'-',"Total_Score":30,'Percentage': '0%'})
+                u.update({'Test_status':"No","Score":'-',"Total_Score":total_questions,'Percentage': '0%'})
             else:
-                u.update({'Test_status':"Yes","Total_Score":30,'Percentage': str(round((u.get('Score') / len(u.get('Questions'))) * 100, 2))+'%'})
+                u.update({'Test_status':"Yes","Total_Score":len(u.get('Questions')),'Percentage': str(round((u.get('Score') / len(u.get('Questions'))) * 100, 2))+'%'})
             u.pop('Questions')
         return HttpResponse(json.dumps({
             'data':  users}), content_type='application/json')
