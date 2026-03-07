@@ -1,6 +1,6 @@
 from datetime import datetime
 import json
-from azure.storage.blob import BlobServiceClient
+from azure.storage.blob import BlobServiceClient, ContentSettings
 from .settings import *
 from django.views.decorators.cache import cache_page
 from django.core.cache import cache
@@ -15,6 +15,15 @@ def get_blob_container_client():
     account_key = AZURE_ACCOUNT_KEY
     connection_string = f"DefaultEndpointsProtocol=https;AccountName={account_name};AccountKey={account_key};EndpointSuffix=core.windows.net"
     return BlobServiceClient.from_connection_string(connection_string).get_container_client(AZURE_CONTAINER)
+
+def upload_blob(blob_name, data, content_type="application/json"):
+    """Upload data to blob. data can be bytes or str."""
+    container_client = get_blob_container_client()
+    blob_client = container_client.get_blob_client(blob_name)
+    if isinstance(data, str):
+        data = data.encode("utf-8")
+    blob_client.upload_blob(data, overwrite=True, content_settings=ContentSettings(content_type=content_type))
+
 
 def download_blob(blob_name):
     # cacheresponse = cache.get(blob_name)

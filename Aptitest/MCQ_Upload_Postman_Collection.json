@@ -1,0 +1,53 @@
+{
+	"info": {
+		"_postman_id": "mcq-upload-collection",
+		"name": "MCQ Upload API",
+		"description": "Upload MCQ questions from Excel to blob. Use form-data with key `file` and select an .xlsx with columns: Qn, Opt01, Opt02, Opt03, Opt04.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Upload MCQ Questions",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": [],
+							"description": "Excel file (.xlsx) with columns: Qn, Opt01, Opt02, Opt03, Opt04"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/upload/mcq/",
+					"host": ["{{base_url}}"],
+					"path": ["upload", "mcq", ""]
+				},
+				"description": "Upload Excel with MCQ questions. Each row becomes a JSON blob. Response: status, uploaded count, failed count, blob_names, errors."
+			}
+		},
+		{
+			"name": "Update MCQ (reload from blob)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/update/mcq/",
+					"host": ["{{base_url}}"],
+					"path": ["update", "mcq", ""]
+				},
+				"description": "Reload MCQ questions from blob storage into cache."
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000"
+		}
+	]
+}

@@ -5,18 +5,19 @@ from django.http import HttpResponse, JsonResponse
 from rest_framework.decorators import api_view
 from Aptitest.models import *
 from ExskilenceTest.Blob_service import *
-JSONDATA = download_list_blob('test_InterviewQuestion/NEWQns/','')
+BLOB_PREFIX = "test_InterviewQuestion/NEWQns/mcq/"
+JSONDATA = download_list_blob(BLOB_PREFIX,'')
 
 @api_view(['GET'])
 def updateJson(request):
     global JSONDATA
     # JSONDATA = download_list_blob('test_InterviewQuestion/','')
-    JSONDATA = download_list_blob('test_InterviewQuestion/NEWQns/','')
+    JSONDATA = download_list_blob(BLOB_PREFIX,'')
     return HttpResponse(json.dumps({'status': 'success'}), content_type='application/json') 
 
 def upjson(data):
     global JSONDATA
-    JSONDATA = data.get('data',download_list_blob('test_InterviewQuestion/NEWQns/',''))
+    JSONDATA = data.get('data',download_list_blob(BLOB_PREFIX,''))
     return 'done'
 
 @api_view(['POST']) 

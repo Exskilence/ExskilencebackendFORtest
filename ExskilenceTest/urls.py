@@ -17,7 +17,8 @@ from django.contrib import admin
 from django.urls import path
 from Aptitest import views as ex,Coding_test as cod,sqlviews as sql,pythonrun as ex_py
 from Aptitest import views as ex,HTML_CSS_views as html_css,js_views as js
-from Aptitest import MCQ_views  as mcq ,Traainer_views as trainer
+from Aptitest import MCQ_views as mcq, Traainer_views as trainer
+from Aptitest import upload_mcq_to_blob as mcq_upload
 urlpatterns = [
     path('admin/', admin.site.urls),
     path ('', ex.home),
@@ -48,6 +49,7 @@ urlpatterns = [
      path('test/submit/',mcq.logout),
      path('test/report/',mcq.report),
      path('update/mcq/',mcq.updateJson),
+     path('upload/mcq/', mcq_upload.upload_mcq_questions),
 
      # both
      path('duration/',ex.Test_duration),
