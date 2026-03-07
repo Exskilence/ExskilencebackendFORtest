@@ -1,0 +1,40 @@
+{
+	"info": {
+		"_postman_id": "add-users-collection",
+		"name": "Add Users (Excel)",
+		"description": "Bulk add users via Excel upload. Use form-data with key `file` and select an .xlsx with columns: Name, Email, College, Branch, Batch.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add Users",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": [],
+							"description": "Excel file (.xlsx) with columns: Name, Email, College, Branch, Batch"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/add/users/",
+					"host": ["{{base_url}}"],
+					"path": ["add", "users", ""]
+				},
+				"description": "Upload an Excel file to bulk add users. Response: status, saved count, notadded count, data (list of emails that failed)."
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000"
+		}
+	]
+}

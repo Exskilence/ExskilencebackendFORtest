@@ -1,10 +1,12 @@
-from datetime import timedelta, timezone
+import json
+from datetime import datetime, timedelta, timezone
 import random
 from django.http import HttpResponse, JsonResponse
 from rest_framework.decorators import api_view
 from Aptitest.models import *
 from ExskilenceTest.Blob_service import *
 from .MCQ_views import upjson
+import openpyxl
 
 ONTIME = ONTIME = datetime.utcnow().__add__(timedelta(hours=5,minutes=30))
 @api_view(['GET'])   
@@ -20,34 +22,82 @@ def home(request):
     # }
 
     return HttpResponse(json.dumps({'Message': 'Welcome to the Home Page of thoughtprocess online test By RK :--'+str(ONTIME)}), content_type='application/json')
+def _parse_users_from_excel(excel_file):
+    """Parse Excel file and return list of dicts with keys: Name, Email, College, Branch, Batch."""
+    wb = openpyxl.load_workbook(excel_file, read_only=True, data_only=True)
+    ws = wb.active
+    rows = list(ws.iter_rows(min_row=1, values_only=True))
+    if not rows:
+        return []
+    header = [str(c).strip() if c else '' for c in rows[0]]
+    name_col = next((i for i, h in enumerate(header) if str(h).lower() == 'name'), 0)
+    email_col = next((i for i, h in enumerate(header) if str(h).lower() == 'email'), 1)
+    college_col = next((i for i, h in enumerate(header) if str(h).lower() == 'college'), 2)
+    branch_col = next((i for i, h in enumerate(header) if str(h).lower() == 'branch'), 3)
+    batch_col = next((i for i, h in enumerate(header) if str(h).lower() == 'batch'), 4)
+    users = []
+    for row in rows[1:]:
+        if not row:
+            continue
+        name = row[name_col] if name_col < len(row) else None
+        email = row[email_col] if email_col < len(row) else None
+        if not email:
+            continue
+        users.append({
+            'Name': str(name).strip() if name else '',
+            'Email': str(email).strip(),
+            'College': str(row[college_col]).strip() if college_col < len(row) and row[college_col] else '',
+            'Branch': str(row[branch_col]).strip() if branch_col < len(row) and row[branch_col] else '',
+            'Batch': str(row[batch_col]).strip() if batch_col < len(row) and row[batch_col] else '',
+        })
+    wb.close()
+    return users
+
+
 @api_view(['POST'])
 def AddUsers(request):
     try:
-        data = json.loads(request.body)
+        excel_file = request.FILES.get('file')
+        if not excel_file:
+            return HttpResponse(json.dumps({
+                'status': 'error',
+                'data': 'No file provided. Upload an Excel file with key "file".'}), content_type='application/json', status=400)
+        if not excel_file.name.endswith(('.xlsx', '.xls')):
+            return HttpResponse(json.dumps({
+                'status': 'error',
+                'data': 'Only .xlsx or .xls files are allowed.'}), content_type='application/json', status=400)
+        if excel_file.name.endswith('.xls'):
+            return HttpResponse(json.dumps({
+                'status': 'error',
+                'data': 'Only .xlsx is supported. Please save your file as Excel (.xlsx).'}), content_type='application/json', status=400)
+        userslist = _parse_users_from_excel(excel_file)
+        if not userslist:
+            return HttpResponse(json.dumps({
+                'status': 'error',
+                'data': 'No valid rows found. Ensure columns: Name, Email, College, Branch, Batch and at least one data row.'}), content_type='application/json', status=400)
         notadded = []
-        userslist = data.get('users')
         for user in userslist:
             try:
-                u = Test_UserDetails.objects.create(
-                    Name = user.get('Name'),
-                    Email = user.get('Email'),
-                    College = user.get('College'),
-                    Branch = user.get('Branch'),
-                    batch = user.get('Batch'),
-                    Year = str(datetime.utcnow().year),
-                    Created_on = datetime.utcnow().replace(tzinfo=timezone.utc) + timedelta(hours=5, minutes=30)
+                Test_UserDetails.objects.create(
+                    Name=user.get('Name') or '',
+                    Email=user.get('Email'),
+                    College=user.get('College') or '',
+                    Branch=user.get('Branch') or '',
+                    batch=user.get('Batch') or '',
+                    Year=str(datetime.utcnow().year),
+                    Created_on=datetime.utcnow().replace(tzinfo=timezone.utc) + timedelta(hours=5, minutes=30)
                 )
-            except Exception as e:
-                notadded.append(user.get('Email'))
+            except Exception:
+                notadded.append(user.get('Email', ''))
         return HttpResponse(json.dumps({
             'status': 'success',
-            'saved': len(userslist)-len(notadded),
+            'saved': len(userslist) - len(notadded),
             'notadded': len(notadded),
             'data': notadded}), content_type='application/json')
     except Exception as e:
         return HttpResponse(json.dumps({
             'status': 'error',
-            'data': str(e)}), content_type='application/json')
+            'data': str(e)}), content_type='application/json', status=500)
 @api_view(['POST']) 
 def login (request):
     try:

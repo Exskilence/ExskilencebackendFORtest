@@ -56,15 +56,15 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
-    'http://localhost:5173/',
-    'https://exskilence-internships.azurewebsites.net/',
-    'https://internships.exskilence.com/',
+    'http://localhost:5173',
+    'https://exskilence-internships.azurewebsites.net',
+    'https://internships.exskilence.com',
     'https://thoughtprocesstest.azurewebsites.net',
 ]
 
 CSRF_TRUSTED_ORIGINS=[ 
-    'https://exskilence-internships.azurewebsites.net/',
-    'https://internships.exskilence.com/',
+    'https://exskilence-internships.azurewebsites.net',
+    'https://internships.exskilence.com',
     'https://thoughtprocesstest.azurewebsites.net',
 ]
 ROOT_URLCONF = 'ExskilenceTest.urls'
