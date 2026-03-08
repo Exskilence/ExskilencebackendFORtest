@@ -14,6 +14,15 @@ from ExskilenceTest.Blob_service import upload_blob
 BLOB_PREFIX = "test_InterviewQuestion/NEWQns/mcq/"
 
 
+def _cell_to_str(val):
+    """Convert cell value to string. Preserves 0 as '0'. Formats 0.1 as '10%' when stored as decimal."""
+    if val is None:
+        return ""
+    if isinstance(val, float) and 0 <= val <= 1 and val not in (0.0, 1.0):
+        return str(int(round(val * 100))) + "%"
+    return str(val).strip()
+
+
 def _parse_mcq_from_excel(excel_file):
     """Parse Excel and return list of dicts with keys: Qn, Opt01, Opt02, Opt03, Opt04."""
     wb = openpyxl.load_workbook(excel_file, read_only=True, data_only=False)
@@ -22,7 +31,7 @@ def _parse_mcq_from_excel(excel_file):
     wb.close()
     if not rows:
         return []
-    header = [str(c).strip() if c else "" for c in rows[0]]
+    header = [_cell_to_str(c) if c is not None else "" for c in rows[0]]
     qn_col = next((i for i, h in enumerate(header) if str(h).lower() == "qn"), 0)
     opt01_col = next((i for i, h in enumerate(header) if str(h).lower() == "opt01"), 1)
     opt02_col = next((i for i, h in enumerate(header) if str(h).lower() == "opt02"), 2)
@@ -33,16 +42,16 @@ def _parse_mcq_from_excel(excel_file):
         if not row:
             continue
         qn = row[qn_col] if qn_col < len(row) else None
-        if not qn:
+        if qn is None or (isinstance(qn, str) and not qn.strip()):
             continue
-        qn_str = str(qn).strip() if qn else ""
+        qn_str = _cell_to_str(qn)
         qn_str = qn_str.replace("\r\n", "\n").replace("\r", "\n")  # normalize line endings
         questions.append({
             "Qn": qn_str,
-            "Opt01": str(row[opt01_col]).strip() if opt01_col < len(row) and row[opt01_col] else "",
-            "Opt02": str(row[opt02_col]).strip() if opt02_col < len(row) and row[opt02_col] else "",
-            "Opt03": str(row[opt03_col]).strip() if opt03_col < len(row) and row[opt03_col] else "",
-            "Opt04": str(row[opt04_col]).strip() if opt04_col < len(row) and row[opt04_col] else "",
+            "Opt01": _cell_to_str(row[opt01_col] if opt01_col < len(row) else None),
+            "Opt02": _cell_to_str(row[opt02_col] if opt02_col < len(row) else None),
+            "Opt03": _cell_to_str(row[opt03_col] if opt03_col < len(row) else None),
+            "Opt04": _cell_to_str(row[opt04_col] if opt04_col < len(row) else None),
         })
     return questions
 
